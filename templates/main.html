@@ -18,7 +18,7 @@
       <section class="row">
          <article class="col-xs-4">
            <div class="input-group">
-             <input type="text" class="search-query form-control" placeholder="Search" />
+             <input data-bind="textInput: filter" class="search-query form-control" placeholder="Search" />
              <span class="input-group-btn">
                <button class="btn btn-danger" type="button">
                  <span class="glyphicon glyphicon-search"></span>
@@ -26,9 +26,9 @@
              </span>
            </div>
            <div class="list-group">
-             <a href="#" data-bind="foreach: locations" class="list-group-item list-group-item-action active">
+             <a href="#" data-bind="foreach: filteredLocations" class="list-group-item list-group-item-action active">
                <h5 class="list-group-item-heading"><span data-bind="text: name"></span></h5>
-               <p class="list-group-item-text">random</p>
+               <p class="list-group-item-text"><span data-bind="text: lon"></span></p>
              </a>
          </div>
          </article>
@@ -39,6 +39,8 @@
     </div>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script type='text/javascript' src='../js/knockout-3.4.0.js'></script>
+    <script src="../js/init.js"></script>
+    <script src="../js/wiki.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/gmaps.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFHYSaEcJT_JEtu4r2Vxips8SRdowPmfE&callback=initMap"></script>
