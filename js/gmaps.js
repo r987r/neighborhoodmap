@@ -27,16 +27,21 @@ var mapMarker = function(locationInfo){
     title: locationInfo.name()
   });
 
+
   this.marker.addListener('click', function() {
+    self.openInfoWindow();
+  });
+
+  this.openInfoWindow = function() {
     if(prev_infowindow) {
       prev_infowindow.close();
     }
     prev_infowindow = self.infoWindow;
     self.infoWindow.setContent(self.locationInfo.summary());
     self.infoWindow.open(gmap, self.marker);
-  });
-
-  function setVisible(visible) {
+  }
+  
+  this.setVisible = function(visible) {
     self.marker.setVisible(visible);
   }
 
