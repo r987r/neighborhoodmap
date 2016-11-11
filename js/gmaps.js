@@ -1,5 +1,16 @@
+var gmapQuery = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAFHYSaEcJT_JEtu4r2Vxips8SRdowPmfE&callback=initMap";
 var gmap;
-var prev_infowindow = false; 
+var infoWindow; 
+var pendingMarkers = [];
+
+function loadMap() {
+
+  $.getScript(gmapQuery)
+    // if getting the script fails
+   .fail(function() {
+
+    });
+}
 
 function initMap() {
   var mapCanvas = document.getElementById("gmap");
@@ -8,6 +19,12 @@ function initMap() {
     zoom: 13
   }
   gmap = new google.maps.Map(mapCanvas, mapOptions);
+  infoWindow = new google.maps.InfoWindow
+  
+  pendingMarkers.forEach(function(mapMarker) {
+      console.log("set markers");
+    mapMarker.createMarker();
+  });
 };
 
 var mapMarker = function(locationInfo){
@@ -16,33 +33,41 @@ var mapMarker = function(locationInfo){
    */
   var self = this;
   this.locationInfo = locationInfo;
+  this.marker;
+  
+  if (typeof google !== 'undefined') {
+    this.createMarker();
+  } else {
+    pendingMarkers.push(this);
+  }
 
-  this.infoWindow = new google.maps.InfoWindow({
-    content: ""
-  });
+  this.createMarker = function() {
+    self.marker = new google.maps.Marker({
+      position: {lat: locationInfo.lat(), lng: locationInfo.lon()},
+      map: gmap,
+      title: locationInfo.name()
+    });
 
-  this.marker = new google.maps.Marker({
-    position: {lat: locationInfo.lat(), lng: locationInfo.lon()},
-    map: gmap,
-    title: locationInfo.name()
-  });
-
-
-  this.marker.addListener('click', function() {
-    self.openInfoWindow();
-  });
+    self.marker.addListener('click', function() {
+      self.openInfoWindow();
+    });
+  }
 
   this.openInfoWindow = function() {
-    if(prev_infowindow) {
-      prev_infowindow.close();
-    }
-    prev_infowindow = self.infoWindow;
-    self.infoWindow.setContent(self.locationInfo.summary());
-    self.infoWindow.open(gmap, self.marker);
+    infoWindow.setContent(self.locationInfo.summary());
+    infoWindow.open(gmap, self.marker);
   }
-  
+ 
+  this.setPosition = function(coords) {
+    if (typeof self.marker !== 'undefined') {
+      self.marker.setPosition(coords);
+    }
+  }
+     
   this.setVisible = function(visible) {
-    self.marker.setVisible(visible);
+    if (typeof self.marker !== 'undefined') {
+      self.marker.setVisible(visible);
+    }
   }
 
 };

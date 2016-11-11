@@ -26,9 +26,9 @@
              </span>
            </div>
            <ul class="list-group" data-bind="foreach: filteredLocations">
-             <a href="#" data-bind="click: openInfoWindow" class="list-group-item list-group-item-action">
+             <li data-bind="click: openInfoWindow" class="list-group-item list-group-item-action" role="button">
                <span data-bind="text: name"></span>
-             </a>
+             </li>
            </ul>
          </article>
          <article class="col-xs-8">
@@ -37,10 +37,9 @@
       </section>
     </div>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script type='text/javascript' src='../js/knockout-3.4.0.js'></script>
+    <script src='../js/knockout-3.4.0.js'></script>
     <script src="../js/init.js"></script>
     <script src="../js/gmaps.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFHYSaEcJT_JEtu4r2Vxips8SRdowPmfE&callback=initMap"></script>
     <script src="../js/wiki.js"></script>
     <script src="../js/main.js"></script>
 

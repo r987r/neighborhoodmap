@@ -16,6 +16,8 @@ var locationData = function(data) {
 var viewModel = function() {
     var self = this;
 
+    loadMap(); // Load Google Map
+
     this.locationList = [];	// If we ever dynamically add elements, need to make observable.
     initialLocations.forEach(function(locationItem) {
         self.locationList.push( new locationData(locationItem) );

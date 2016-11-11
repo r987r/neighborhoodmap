@@ -40,7 +40,7 @@ function getLocation(locationInfo) {
             $.each(response['query']['pages'], function(key, value) {
                 locationInfo.lat(value['coordinates']['0']['lat']);
                 locationInfo.lon(value['coordinates']['0']['lon']);
-                locationInfo.mapMarker.marker.setPosition({lat: locationInfo.lat(), lng: locationInfo.lon()});
+                locationInfo.mapMarker.setPosition({lat: locationInfo.lat(), lng: locationInfo.lon()});
             });
             clearTimeout(timeout);
         },
