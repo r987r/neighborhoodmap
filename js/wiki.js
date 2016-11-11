@@ -10,9 +10,9 @@ function fetchWikiInfo(locationInfo){
 }
 
 function getSummary(locationInfo) {
-    var summaryURL = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=" + locationInfo.name();
+    var summaryURL = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=" + locationInfo.name;
     var timeout = setTimeout(function() {
-        locationInfo.summary("could not retrieve summary");
+        locationInfo.summary = "could not retrieve summary";
     }, 8000);
         
     $.ajax({
@@ -20,7 +20,7 @@ function getSummary(locationInfo) {
         dataType: "jsonp",
         success: function (response) {
             $.each(response['query']['pages'], function(key, value) {
-                locationInfo.summary(value['extract']);
+                locationInfo.summary = value['extract'];
             });
             clearTimeout(timeout);
         },
@@ -28,9 +28,9 @@ function getSummary(locationInfo) {
 };
 
 function getLocation(locationInfo) {
-    var coordsURL = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=coordinates&titles=" + locationInfo.name();
+    var coordsURL = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=coordinates&titles=" + locationInfo.name;
     var timeout = setTimeout(function() {
-        locationInfo.name(locationInfo.name() + " :could not get coords");
+        locationInfo.errorInfo("no coord");
     }, 8000);
 
     $.ajax({
@@ -38,9 +38,9 @@ function getLocation(locationInfo) {
         dataType: "jsonp",
         success: function (response) {
             $.each(response['query']['pages'], function(key, value) {
-                locationInfo.lat(value['coordinates']['0']['lat']);
-                locationInfo.lon(value['coordinates']['0']['lon']);
-                locationInfo.mapMarker.setPosition({lat: locationInfo.lat(), lng: locationInfo.lon()});
+                locationInfo.lat = value['coordinates']['0']['lat'];
+                locationInfo.lon = value['coordinates']['0']['lon'];
+                locationInfo.mapMarker.createMarker();
             });
             clearTimeout(timeout);
         },

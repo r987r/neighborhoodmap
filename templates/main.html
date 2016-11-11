@@ -28,11 +28,22 @@
            <ul class="list-group" data-bind="foreach: filteredLocations">
              <li data-bind="click: openInfoWindow" class="list-group-item list-group-item-action" role="button">
                <span data-bind="text: name"></span>
+               <span data-bind="if: errorInfo">
+                 <span class="badge badge-danger">
+                   <span data-bind="text: errorInfo"></span>
+                 </span>
+               </span>
              </li>
            </ul>
          </article>
          <article class="col-xs-8">
+           <span data-bind="if: gMapError">
+             <div class="alert alert-danger">
+               <strong>Error!</strong> gmap did not load correctly.
+             </div>
+           </span>
            <div id="gmap" class="iframe-container"></div>
+
          </article>
       </section>
     </div>

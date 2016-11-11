@@ -1,15 +1,16 @@
 var gmapQuery = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAFHYSaEcJT_JEtu4r2Vxips8SRdowPmfE&callback=initMap";
 var gmap;
 var infoWindow; 
-var pendingMarkers = [];
+var pendingMarkers = [];	// Incase wikipedia coordinate info comes before google map init.
 
-function loadMap() {
+function loadMap(viewModel) {
+  var timeout = setTimeout(function() {
+    viewModel.gMapError(true);
+  }, 4000);
 
-  $.getScript(gmapQuery)
-    // if getting the script fails
-   .fail(function() {
-
-    });
+  $.getScript(gmapQuery, function(){
+    clearTimeout(timeout);
+   });
 }
 
 function initMap() {
@@ -20,12 +21,16 @@ function initMap() {
   }
   gmap = new google.maps.Map(mapCanvas, mapOptions);
   infoWindow = new google.maps.InfoWindow
-  
-  pendingMarkers.forEach(function(mapMarker) {
-      console.log("set markers");
-    mapMarker.createMarker();
+  pendingMarkers.forEach(function(marker) {
+    marker.createMarker();
   });
 };
+
+function closeInfoWindow() {
+  if (typeof infoWindow !== 'undefined') {
+    infoWindow.close();
+  }
+}
 
 var mapMarker = function(locationInfo){
   /*
@@ -34,33 +39,31 @@ var mapMarker = function(locationInfo){
   var self = this;
   this.locationInfo = locationInfo;
   this.marker;
-  
-  if (typeof google !== 'undefined') {
-    this.createMarker();
-  } else {
-    pendingMarkers.push(this);
-  }
 
   this.createMarker = function() {
-    self.marker = new google.maps.Marker({
-      position: {lat: locationInfo.lat(), lng: locationInfo.lon()},
-      map: gmap,
-      title: locationInfo.name()
-    });
+    if (typeof google !== 'undefined') {
+      self.marker = new google.maps.Marker({
+        position: {lat: locationInfo.lat, lng: locationInfo.lon},
+        map: gmap,
+        title: locationInfo.name
+      });
 
-    self.marker.addListener('click', function() {
-      self.openInfoWindow();
-    });
+      self.marker.addListener('click', function() {
+        self.openInfoWindow();
+      });
+    } else {
+      pendingMarkers.push(this);
+    }
   }
 
   this.openInfoWindow = function() {
-    infoWindow.setContent(self.locationInfo.summary());
-    infoWindow.open(gmap, self.marker);
-  }
- 
-  this.setPosition = function(coords) {
-    if (typeof self.marker !== 'undefined') {
-      self.marker.setPosition(coords);
+    if (typeof self.marker != 'undefined') {
+      if(typeof infoWindow.anchor != 'undefined') {
+        infoWindow.anchor.setAnimation(null);
+      }
+      self.marker.setAnimation(google.maps.Animation.BOUNCE);
+      infoWindow.setContent(self.locationInfo.summaryHTML());
+      infoWindow.open(gmap, self.marker);
     }
   }
      
