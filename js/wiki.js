@@ -1,3 +1,9 @@
+/*
+ *  The functions below after we receive the information from wikipedia
+ *  will update both the model used in knockout as well as the markers
+ *  used on google maps. The InfoWindow in google maps doesnt need to be updated.
+ *
+ */
 function fetchWikiInfo(locationInfo){
     getLocation(locationInfo);
     getSummary(locationInfo);
@@ -11,8 +17,6 @@ function getSummary(locationInfo) {
         dataType: "jsonp",
         success: function (response) {
             console.log(response);
-            var lat = -1;
-            var lon = -1;
             $.each(response['query']['pages'], function(key, value) {
                 locationInfo.summary(value['extract']);
             });
@@ -29,11 +33,10 @@ function getLocation(locationInfo) {
         dataType: "jsonp",
         success: function (response) {
             console.log(response);
-            var lat = -1;
-            var lon = -1;
             $.each(response['query']['pages'], function(key, value) {
                 locationInfo.lat(value['coordinates']['0']['lat']);
                 locationInfo.lon(value['coordinates']['0']['lon']);
+                locationInfo.marker.marker.setPosition({lat: locationInfo.lat(), lng: locationInfo.lon()});
             });
         },
         error: function (errorMessage) {

@@ -1,10 +1,16 @@
 var locationInfo = function(data) {
+    self = this;
+
     this.name = ko.observable(data.name);
     this.summary = ko.observable(data.summary);
     this.lon = ko.observable(data.lon);
     this.lat = ko.observable(data.lat);
-    
+    this.marker = new mapMarker(this); // allocate it, update in wiki api callbacks. 
     fetchWikiInfo(this);
+
+    function openInfoWindow() {
+        self.marker.infoWindow.open();    
+    };
 };
 
 var viewModel = function() {
