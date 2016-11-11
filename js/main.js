@@ -1,5 +1,5 @@
 var locationInfo = function(data) {
-    self = this;
+    var self = this;
 
     this.name = ko.observable(data.name);
     this.summary = ko.observable(data.summary);
@@ -9,6 +9,7 @@ var locationInfo = function(data) {
     fetchWikiInfo(this);
 
     function openInfoWindow() {
+        console.log("works");
         self.marker.infoWindow.open();    
     };
 };
@@ -24,10 +25,19 @@ var viewModel = function() {
     this.filter = ko.observable("");
     this.filteredLocations = ko.computed(function() {
         if(!self.filter()) {
+            self.locationList().forEach(function(locs) {
+                 locs.marker.marker.setVisible(true);
+            });
             return self.locationList(); 
         } else {
             return ko.utils.arrayFilter(self.locationList(), function(locs) {
-                return (locs.name().toUpperCase().indexOf(self.filter().toUpperCase()) != -1);
+                if (locs.name().toUpperCase().indexOf(self.filter().toUpperCase()) != -1) {
+                    locs.marker.marker.setVisible(true);
+                    return true;
+                } else {
+                    locs.marker.marker.setVisible(false);
+                    return false;
+                }
             });
         }
     });

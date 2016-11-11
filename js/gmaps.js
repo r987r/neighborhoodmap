@@ -17,7 +17,9 @@ var mapMarker = function(locationInfo){
   var self = this;
   this.locationInfo = locationInfo;
 
-  this.infoWindow = new google.maps.InfoWindow;
+  this.infoWindow = new google.maps.InfoWindow({
+    content: ""
+  });
 
   this.marker = new google.maps.Marker({
     position: {lat: locationInfo.lat(), lng: locationInfo.lon()},
@@ -33,6 +35,10 @@ var mapMarker = function(locationInfo){
     self.infoWindow.setContent(self.locationInfo.summary());
     self.infoWindow.open(gmap, self.marker);
   });
+
+  function setVisible(visible) {
+    self.marker.setVisible(visible);
+  }
 
 };
 
