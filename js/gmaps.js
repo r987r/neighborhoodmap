@@ -58,7 +58,7 @@ var mapMarker = function(locationInfo){
 
   this.openInfoWindow = function() {
     if (typeof self.marker != 'undefined') {
-      if(typeof infoWindow.anchor != 'undefined') {
+      if(infoWindow.anchor) {
         infoWindow.anchor.setAnimation(null);
       }
       self.marker.setAnimation(google.maps.Animation.BOUNCE);
